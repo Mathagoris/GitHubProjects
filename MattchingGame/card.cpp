@@ -9,31 +9,74 @@
 // ============================================================================
 
 #include <iostream>
+#include "windows.h"
 using namespace std;
 #include "card.h"
 
-void Card::DrawFaceDown()
+void Card::DrawFaceDown(HANDLE out)
 {
-	cout << "------------" << endl
-		 << "|          |" << endl
-		 << "|          |" << endl
-		 << "|          |" << endl
-		 << "|          |" << endl
-		 << "|          |" << endl
-		 << "------------";
+	COORD pos = mPosition;
+	pos.X += 1;
+	SetConsoleCursorPosition(out, pos);
+	cout << "    ------------";
+	pos.X -= 16;
+	pos.Y += 1;
+	SetConsoleCursorPosition(out, pos);
+	cout << "     |          |";
+	pos.X -= 16;
+	pos.Y += 1;
+	SetConsoleCursorPosition(out, pos);
+	cout << "     |          |";
+	pos.X -= 16;
+	pos.Y += 1;
+	SetConsoleCursorPosition(out, pos);
+	cout << "     |          |";
+	pos.X -= 16;
+	pos.Y += 1;
+	SetConsoleCursorPosition(out, pos);
+	cout << "     |          |";
+	pos.X -= 16;
+	pos.Y += 1;
+	SetConsoleCursorPosition(out, pos);
+	cout << "     |          |";
+	pos.X -= 16;
+	pos.Y += 1;
+	SetConsoleCursorPosition(out, pos);
+	cout << "     ------------";
 }
 
-void Card::Draw()
+void Card::Draw(HANDLE out)
 {
+	COORD pos = mPosition;
+	pos.X += 1;
+	SetConsoleCursorPosition(out, pos);
 	if(mValue == 0)
 	{
-			cout << "------------" << endl
-				 << "|  ******  |" << endl
-				 << "|  *    *  |" << endl
-				 << "|  *    *  |" << endl
-				 << "|  *    *  |" << endl
-				 << "|  ******  |" << endl
-				 << "------------";
+			cout << "    ------------";
+			pos.X -= 16;
+			pos.Y += 1;
+			SetConsoleCursorPosition(out, pos);
+			cout << "     |  ******  |";
+			pos.X -= 16;
+			pos.Y += 1;
+			SetConsoleCursorPosition(out, pos);
+			cout << "     |  *    *  |";
+			pos.X -= 16;
+			pos.Y += 1;
+			SetConsoleCursorPosition(out, pos);
+			cout << "     |  *    *  |";
+			pos.X -= 16;
+			pos.Y += 1;
+			SetConsoleCursorPosition(out, pos);
+			cout << "     |  *    *  |";
+			pos.X -= 16;
+			pos.Y += 1;
+			SetConsoleCursorPosition(out, pos);
+			cout << "     |  ******  |";
+			pos.X -= 16;
+			pos.Y += 1;
+			SetConsoleCursorPosition(out, pos);
+			cout << "     ------------";
 	}
 	else if(mValue == 1)
 	{
