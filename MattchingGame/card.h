@@ -15,7 +15,7 @@ class Card
 {
 public:
 	//Constructors and destructors
-	Card() : mMatch(false), mRandomized(true) {}
+	Card() : mMatch(false), mRandomized(false) {}
 	~Card() {}
 
 	//Member functions
@@ -27,7 +27,7 @@ public:
 	void	SetVal(int val) {mValue = val;}
 	void	SetMatch() {mMatch = true;}
 	void	SetRand() {mRandomized = true;}
-	void	SetCoord(int x, int y) { mPosition.X = x; mPosition.Y = y;}
+	void	SetCoord(COORD pos) { mPosition.X = pos.X; mPosition.Y = pos.Y;}
 private:
 	int		mValue;
 	bool	mMatch;
