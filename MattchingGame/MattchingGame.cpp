@@ -23,6 +23,7 @@ using namespace std;
 void InitialDraw(HANDLE out, Card* cards);
 void RandomizeDeck(Card* cards);
 void GameEngine(HANDLE out, Card* cards);
+void FlushInstream(istream  &inStream = cin);
 const int NUM_CARDS = 16;
 
 // ==== main ==================================================================
@@ -39,6 +40,18 @@ int	main(void)
 	GameEngine(output, cardDeck);
 
 }
+
+// ==== RandomizeDeck =========================================================
+//
+// This function randomly sets the value of each card in the deck
+//
+// Input:
+//		cards	-- an array of cards
+//
+// Output:
+//      Nothing.
+//
+// ============================================================================
 
 void RandomizeDeck(Card* cards)
 {
@@ -62,7 +75,21 @@ void RandomizeDeck(Card* cards)
 		cards[random].SetRand();
 	}
 
-}
+}  // end of "RandomizeDeck"
+
+// ==== InitialDraw ===========================================================
+//
+// This function draws the initial game board and also sets the coordinates
+// of each card
+//
+// Input:
+//      out		-- handle to the current output console
+//		cards	-- an array of cards
+//
+// Output:
+//      Nothing.
+//
+// ============================================================================
 
 void InitialDraw(HANDLE out, Card* cards)
 {
@@ -95,8 +122,28 @@ void InitialDraw(HANDLE out, Card* cards)
 		pos.Y += 8;
 		cout << endl;
 	}
-	cout << endl;
-}
+	cout << endl << "Enter your first card choice followed by your second "
+		 << "card choice: ";
+
+}  // end of "Initial Draw"
+
+
+// ==== GameEngine ============================================================
+//
+// This function is the heart of the game. Most of the logic is found in this
+// section of the code. The user is asked for two guesses to match a pattern
+// on two cards. If they match the cards are left face up. Once all matches are
+// found the program lets the user know how many valid guesses it took to
+// complete the game.
+//
+// Input:
+//      out		-- handle to the current output console
+//		cards	-- an array of cards
+//
+// Output:
+//      Nothing.
+//
+// ============================================================================
 
 void GameEngine(HANDLE out, Card* cards)
 {
@@ -106,8 +153,6 @@ void GameEngine(HANDLE out, Card* cards)
 	CONSOLE_CURSOR_INFO		visible, invisible;
 	int		numMatches = 0, numGuesses = 0, guessOne, guessTwo;
 
-	cout << "Enter your first card choice followed by your second "
-		 << "card choice: ";
 	GetConsoleScreenBufferInfo(out, &bufferInfo);
 	cursorPos = bufferInfo.dwCursorPosition;
 	startLine.X = 0;
@@ -121,6 +166,7 @@ void GameEngine(HANDLE out, Card* cards)
 		SetConsoleCursorPosition(out, startLine);
 		cout << "Enter your first card choice followed by your second "
 			 << "card choice: ";
+		// Take in number of first guess and validate
 		if(cin >> guessOne && guessOne <= 16 && guessOne >= 1 &&
 		   !cards[guessOne - 1].GetMatch())
 		{
@@ -129,14 +175,17 @@ void GameEngine(HANDLE out, Card* cards)
 			cout << "     ";
 			SetConsoleCursorPosition(out, cursorPos);
 			Sleep(1000);
+			// Take in number of first guess and validate
 			if(cin >> guessTwo && guessTwo <= 16 && guessTwo >= 1 &&
-			   !cards[guessTwo - 1].GetMatch())
+			   guessOne != guessTwo && !cards[guessTwo - 1].GetMatch())
 			{
 				cards[guessTwo - 1].Draw(out);
 				SetConsoleCursorPosition(out, cursorPos);
 				cout << "     ";
 				SetConsoleCursorPosition(out, startLine);
 				Sleep(1000);
+				// Check if values are equal, if so leave cards visible and 
+				// mark them as a match
 				if(cards[guessOne - 1].GetVal() == cards[guessTwo - 1].GetVal())
 				{
 					cout << "You got a match!                              "
@@ -149,6 +198,7 @@ void GameEngine(HANDLE out, Card* cards)
 					++numMatches;
 					++numGuesses;
 				}
+				// If not, flip cards back over and restart process
 				else
 				{
 					SetConsoleCursorPosition(out, startLine);
@@ -162,6 +212,7 @@ void GameEngine(HANDLE out, Card* cards)
 					cards[guessTwo - 1].DrawFaceDown(out);
 				}
 			}
+			// Invalid second choice
 			else
 			{
 				SetConsoleCursorPosition(out, startLine);
@@ -173,6 +224,7 @@ void GameEngine(HANDLE out, Card* cards)
 				SetConsoleCursorInfo(out, &visible);
 			}
 		}
+		// Invalid first choice
 		else
 		{
 			SetConsoleCursorPosition(out, startLine);
@@ -182,10 +234,39 @@ void GameEngine(HANDLE out, Card* cards)
 			Sleep(2000);
 			SetConsoleCursorInfo(out, &visible);
 		}
-		cin.clear();
+		FlushInstream();
 	}
 	SetConsoleCursorPosition(out, startLine);
 	cout << "Congratulations, you beat Matt's World Famous Mattching game in "
 		 << numGuesses << " guesses!" << endl;
 	system("pause");
-}
+
+}  // end of "GameEngine"
+
+// ==== FlushInstream =========================================================
+//
+// This function clears the input buffer until a new line or eof is encountered
+//
+// Input:
+//      inStream    -- a reference to the input stream to flush
+//
+// Output:
+//      Nothing.
+//
+// ============================================================================
+
+void    FlushInstream(istream  &inStream)
+{
+    char        inChar;
+
+    inStream.clear();
+    while (false == inStream.eof())
+    {
+        inStream.get(inChar);
+        if ('\n' == inChar)
+            {
+            break;
+            }
+    }
+
+}  // end of "FlushInstream"
